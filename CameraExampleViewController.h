@@ -52,9 +52,9 @@
 
         
     
-        __weak IBOutlet UILabel *hotdogLabel;
+        __weak IBOutlet UIImageView *hotdogImg;
         
-        std::vector<std::string> labels;
+  std::vector<std::string> labels;
   double total_latency;
   int total_count;
 }

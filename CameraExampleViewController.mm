@@ -383,13 +383,10 @@ void ProcessInputWithQuantizedModel(
     const float confidence = result.first;
     const int index = result.second;
       currentObject = index;
-    if (index == 899){
-    
+    if (index == 935){
         NSString* labelObject = [NSString stringWithUTF8String:labels[index].c_str()];
         NSNumber* valueObject = [NSNumber numberWithFloat:confidence];
         [newValues setObject:valueObject forKey:labelObject];
-    } else {
-        
     }
   }
   dispatch_async(dispatch_get_main_queue(), ^(void) {
@@ -415,7 +412,13 @@ void ProcessInputWithQuantizedModel(
 
 - (void)viewDidLoad {
   [super viewDidLoad];
-    hotdogLabel.layer.zPosition = 5;
+    hotdogImg.layer.zPosition = 5;
+   
+    hotdogImg.center = CGPointMake(150,500);
+    
+    
+    //rotate rect
+    hotdogImg.transform = CGAffineTransformMakeRotation(M_PI_2);
     
   labelLayers = [[NSMutableArray alloc] init];
   oldPredictionValues = [[NSMutableDictionary alloc] init];
@@ -540,20 +543,21 @@ void ProcessInputWithQuantizedModel(
   const float labelMarginX = 5.0f;
   const float labelMarginY = 5.0f;
 
+    hotdogImg.layer.zPosition = 5;
+    if (currentObject == 935) {
+        hotdogImg.image = [UIImage imageNamed: @"YesHotdog.png"];
+    } else {
+        hotdogImg.image = [UIImage imageNamed: @"NotHotdogIcon.png"];
+    }
+    
   [self removeAllLabelLayers];
 
   int labelCount = 0;
     
-    if (currentObject == 899) {
-        hotdogLabel.text = [NSString stringWithFormat: @"%s", "Is a hotdog!"];
-    } else {
-        hotdogLabel.text = [NSString stringWithFormat: @"%s", "Not a hotdog!"];
-    }
     
   for (NSDictionary* entry in sortedLabels) {
     NSString* label = [entry objectForKey:@"label"];
     NSNumber* valueObject = [entry objectForKey:@"value"];
-  
     const float value = [valueObject floatValue];
     const float originY = topMargin + ((labelHeight + labelMarginY) * labelCount);
     const int valuePercentage = (int)roundf(value * 100.0f);
@@ -561,21 +565,6 @@ void ProcessInputWithQuantizedModel(
     const float valueOriginX = leftMargin;
     NSString* valueText = [NSString stringWithFormat:@"%d%%", valuePercentage];
       
-    [self addLabelLayerWithText:valueText
-                        originX:valueOriginX
-                        originY:originY
-                          width:valueWidth
-                         height:valueHeight
-                      alignment:kCAAlignmentRight];
-
-    const float labelOriginX = (leftMargin + valueWidth + labelMarginX);
-
-    [self addLabelLayerWithText:[label capitalizedString]
-                        originX:labelOriginX
-                        originY:originY
-                          width:labelWidth
-                         height:labelHeight
-                      alignment:kCAAlignmentLeft];
       
       
     
